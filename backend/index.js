@@ -1,7 +1,10 @@
 const bcrypt = require('bcrypt')
 const express = require('express')
 const jwt = require('jsonwebtoken')
+
 const authmiddleware = require('./authmiddleware');
+const {userRouter}=require("./routes/user")
+const {courseRouter}=require("./routes/course")
 
 const mongoose = require('mongoose');
 const app = express()
