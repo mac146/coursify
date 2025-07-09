@@ -1,3 +1,6 @@
+require('dotenv').config()
+console.log(" mongoose_url:", process.env.mongoose_url);
+
 const bcrypt = require('bcrypt')
 const express = require('express')
 const jwt = require('jsonwebtoken')
@@ -22,7 +25,7 @@ app.use("/admin",adminRouter)
 app.use("/course",courseRouter)
     
 async function main(){
-   await mongoose.connect("mongodb+srv://mayankkumars584:Mayank%40146@cluster0.t1lcct0.mongodb.net/coursify-database?retryWrites=true&w=majority")
+   await mongoose.connect(process.env.mongoose_url)
     app.listen(3000);
     console.log("listening on port 3000")
 }

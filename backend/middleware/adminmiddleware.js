@@ -1,6 +1,7 @@
 const express=require('express')
 const jwt=require('jsonwebtoken')
-const Jwt_ADMIN_SECRET = "1234";
+   const Jwt_ADMIN_SECRET=process.env.Jwt_ADMIN_SECRET
+
 
 async function adminmiddleware(req,res,next){
     try{

@@ -1,6 +1,6 @@
 const express=require('express')
 const jwt=require('jsonwebtoken')
-const Jwt_USER_SECRET = "macc1234";
+const Jwt_USER_SECRET=process.env.Jwt_USER_SECRET
 
 async function usermiddleware(req,res,next){
     try{
