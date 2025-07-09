@@ -1,5 +1,5 @@
 const{Router}=require('express')
-const{adminModel}=require("../db")
+const{adminModel, courseModel}=require("../db")
 const adminRouter=Router()
 const adminmiddleware = require("../middleware/adminmiddleware");
 const z = require("zod");
@@ -61,10 +61,10 @@ adminRouter.post("/signup",async(req,res)=>{
 adminRouter.post("/signin",async(req,res)=>{
     const {password,email} = req.body
     
-    const user = await adminModel.findOne({
+    const admin = await adminModel.findOne({
         email: email
     })
-    if (!user) {
+    if (!admin) {
         return res.json({ message: "user not found" })
     }
     console.log("Entered password:", password);
@@ -89,15 +89,40 @@ adminRouter.post("/signin",async(req,res)=>{
 })
 
 
-adminRouter.post("/newcourse",(req,res)=>{
+adminRouter.post("/newcourse",adminmiddleware,async(req,res)=>{
+    const adminid=req.userid
+    const {title,description,imageurl,price}=req.body
 
+    const course=await courseModel.create({
+        title,
+        description,
+        imageurl,
+        price,
+        courseby:adminid
+    })
+    res.json({
+        message:"course created",
+        courseid:course._id
+    })
 })
 
 adminRouter.delete("/deleting-content",(req,res)=>{
 
 })
 
-adminRouter.put("/updating-course",(req,res)=>{
+adminRouter.put("/updating-course",adminmiddleware,async(req,res)=>{
+    
+    const {courseid,title,description,imageurl,price}=req.body
+    const course=await courseModel.findOneAndUpdate({ _id: courseid, createdBy: req.adminid },{
+        title,
+        description,
+        imageurl,
+        price
+    }, { new: true }   )
+
+    res.json({
+        message:"update succesfully"
+    })
 
 })
 
