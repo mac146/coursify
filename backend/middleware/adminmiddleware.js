@@ -2,7 +2,7 @@ const express=require('express')
 const jwt=require('jsonwebtoken')
 const Jwt_SECRET = "macc1234";
 
-async function usermiddleware(req,res,next){
+async function adminmiddleware(req,res,next){
     try{
         const token=req.headers.token
 
@@ -12,7 +12,7 @@ async function usermiddleware(req,res,next){
             })
         }
         const decoded=jwt.verify(token,Jwt_SECRET)
-            req.userid=decoded.id
+            req.adminid=decoded.id
             next();
         
     }catch(e){
@@ -22,4 +22,4 @@ async function usermiddleware(req,res,next){
     }
 }
 
-module.exports=usermiddleware;
+module.exports=adminmiddleware;

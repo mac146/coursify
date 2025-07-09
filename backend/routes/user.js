@@ -1,5 +1,8 @@
 const{Router}=require('express')
 const userRouter=Router()
+const {userModel}=require("../db")
+const usermiddleware = require("../middleware/usermiddleware");
+
 
 userRouter.post("/signup", async (req, res) => {
     const hasuppercase = (val) => /[A-Z]/.test(val);
@@ -83,7 +86,7 @@ userRouter.post("/signin", async (req, res) => {
     }
 })
 
-userRouter.get("/purchases",(req,res)=>{
+userRouter.get("/purchases",usermiddleware,(req,res)=>{
     
 })
 

@@ -8,7 +8,7 @@ courseRouter.get("/preview",async(req,res)=>{
 })
 
 courseRouter.post("/purchase",async(req,res)=>{
-
+    req.userid=decoded.id
 })
 
 module.exports={
