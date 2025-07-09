@@ -68,13 +68,12 @@ adminRouter.post("/signin",async(req,res)=>{
         return res.json({ message: "user not found" })
     }
     console.log("Entered password:", password);
-    console.log("Stored hashed password:", user.password);
+    console.log("Stored hashed password:", admin.password);
 
-    const matchedpassword = await bcrypt.compare(password, user.password)
+    const matchedpassword = await bcrypt.compare(password, admin.password)
     if (matchedpassword) {
         const token = jwt.sign({
-            id: user._id,
-            
+            id: admin._id,
         }, Jwt_ADMIN_SECRET)
 
         res.json({
@@ -90,7 +89,7 @@ adminRouter.post("/signin",async(req,res)=>{
 
 
 adminRouter.post("/newcourse",adminmiddleware,async(req,res)=>{
-    const adminid=req.userid
+    const adminid=req.adminid
     const {title,description,imageurl,price}=req.body
 
     const course=await courseModel.create({
@@ -106,14 +105,26 @@ adminRouter.post("/newcourse",adminmiddleware,async(req,res)=>{
     })
 })
 
-adminRouter.delete("/deleting-content",(req,res)=>{
-
+adminRouter.delete("/deleting-content",adminmiddleware,async(req,res)=>{
+    const adminid=req.adminid
+    const {title,description,imageurl,price}=req.body
+    await courseModel.findOneAndDelete({ _id: courseid, courseby: adminid },{
+        title,
+        description,
+        imageurl,
+        price
+    }, { new: true }   ) 
+    res.json({
+    message:"deleted succesfully"
+})
 })
 
 adminRouter.put("/updating-course",adminmiddleware,async(req,res)=>{
     
-    const {courseid,title,description,imageurl,price}=req.body
-    const course=await courseModel.findOneAndUpdate({ _id: courseid, createdBy: req.adminid },{
+    const {courseid}=req.body
+    const adminid = req.adminid;
+
+    const course=await courseModel.findOneAndUpdate({ _id: courseid, courseby: adminid },{
         title,
         description,
         imageurl,
