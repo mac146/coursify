@@ -11,7 +11,7 @@ const app = express()
 
 
 
-app.use(express.json())
+app.use(express.json());
 
 const Jwt_SECRET = "macc1234";
 

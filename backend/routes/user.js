@@ -2,6 +2,10 @@ const{Router}=require('express')
 const userRouter=Router()
 const {userModel}=require("../db")
 const usermiddleware = require("../middleware/usermiddleware");
+const bcrypt = require("bcrypt");
+const z = require("zod");
+const jwt = require("jsonwebtoken");
+const Jwt_SECRET = "macc1234";
 
 
 userRouter.post("/signup", async (req, res) => {
@@ -10,7 +14,8 @@ userRouter.post("/signup", async (req, res) => {
     const specialcase = (val) => /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(val);
 
     const requirebody=z.object({
-        username: z.string().min(3).max(10),
+        firstname: z.string().min(3).max(10),
+        lastname: z.string().min(3).max(10),
         email: z.string().email(),
         password:z.string().min(3).max(6)
         .refine(hasuppercase,{message:"should contain one uppercase"})
@@ -28,16 +33,15 @@ userRouter.post("/signup", async (req, res) => {
         return;
     }
 
-    const username = req.body.username
-    const password = req.body.password
-    const email = req.body.email
+   const {email,password,firstname,lastname}=req.body
 
     console.log("Password received during signup:", password); 
     const hashedpassword = await bcrypt.hash(password, 5)
     console.log(hashedpassword)
     try {
         await userModel.create({
-            username: username,
+            firstname:firstname,
+            lastname:lastname,
             password: hashedpassword,
             email: email
         })
@@ -56,8 +60,7 @@ userRouter.post("/signup", async (req, res) => {
 })
 
 userRouter.post("/signin", async (req, res) => {
-    const password = req.body.password
-    const email = req.body.email
+    const {password ,email}=req.body;
 
     const user = await userModel.findOne({
         email: email
@@ -87,7 +90,7 @@ userRouter.post("/signin", async (req, res) => {
 })
 
 userRouter.get("/purchases",usermiddleware,(req,res)=>{
-    
+    res.json({ message: "purchases endpoint" });
 })
 
 module.exports={
