@@ -21,25 +21,23 @@ const admin=new Schema({
 
 })
 
-const course=new Schema({
-    creatorid:ObjectId,
-    title:String,
-    description:String,
-    imageurl:String,
-    price:Number
-    
+const courseSchema = new Schema({
+    creatorid: { type: mongoose.Schema.Types.ObjectId, ref: "admins", required: true },
+    title: String,
+    description: String,
+    imageurl: String,
+    price: Number
 })
 
-const purchase=new Schema({
-    courseid:ObjectId,
-    userid:ObjectId
-
+const purchaseSchema = new  Schema({
+  userid: { type: ObjectId, ref: "users" },
+  courseid: { type: ObjectId, ref: "courses" }
 })
 
 const userModel = mongoose.model("users", user);
 const adminModel = mongoose.model("admins", admin);
-const courseModel = mongoose.model("courses", course);
-const purchaseModel = mongoose.model("purchases", purchase);
+const courseModel = mongoose.model("courses", courseSchema);
+const purchaseModel = mongoose.model("purchases", purchaseSchema);
 
 
 module.exports = {

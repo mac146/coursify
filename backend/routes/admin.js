@@ -97,7 +97,7 @@ adminRouter.post("/newcourse",adminmiddleware,async(req,res)=>{
         description,
         imageurl,
         price,
-        courseby:adminid
+        creatorid:adminid
     })
     res.json({
         message:"course created",
@@ -107,13 +107,12 @@ adminRouter.post("/newcourse",adminmiddleware,async(req,res)=>{
 
 adminRouter.delete("/deleting-content",adminmiddleware,async(req,res)=>{
     const adminid=req.adminid
-    const {title,description,imageurl,price}=req.body
-    await courseModel.findOneAndDelete({ _id: courseid, courseby: adminid },{
-        title,
-        description,
-        imageurl,
-        price
-    }, { new: true }   ) 
+    const {courseid}=req.body
+   
+    await courseModel.findOneAndDelete({
+        _id:courseid,
+        creatorid:adminid
+    })  
     res.json({
     message:"deleted succesfully"
 })
@@ -123,8 +122,8 @@ adminRouter.put("/updating-course",adminmiddleware,async(req,res)=>{
     
     const {courseid}=req.body
     const adminid = req.adminid;
-
-    const course=await courseModel.findOneAndUpdate({ _id: courseid, courseby: adminid },{
+     const {title,description,imageurl,price}=req.body
+    const course=await courseModel.findOneAndUpdate({ _id: courseid, creatorid: adminid },{
         title,
         description,
         imageurl,
