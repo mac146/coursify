@@ -1,6 +1,6 @@
 const express=require('express')
 const jwt=require('jsonwebtoken')
-const Jwt_SECRET = "macc1234";
+const Jwt_ADMIN_SECRET = "1234";
 
 async function adminmiddleware(req,res,next){
     try{
@@ -11,7 +11,7 @@ async function adminmiddleware(req,res,next){
                 message:"token not provided"
             })
         }
-        const decoded=jwt.verify(token,Jwt_SECRET)
+        const decoded=jwt.verify(token,Jwt_ADMIN_SECRET)
             req.adminid=decoded.id
             next();
         

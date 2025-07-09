@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt')
 const express = require('express')
 const jwt = require('jsonwebtoken')
 
+
+
 const {userRouter}=require("./routes/user")
 const {courseRouter}=require("./routes/course")
 const {adminRouter}=require("./routes/admin")
@@ -13,7 +15,7 @@ const app = express()
 
 app.use(express.json());
 
-const Jwt_SECRET = "macc1234";
+
 
 app.use("/user",userRouter)
 app.use("/admin",adminRouter)

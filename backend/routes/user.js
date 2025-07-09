@@ -5,7 +5,7 @@ const usermiddleware = require("../middleware/usermiddleware");
 const bcrypt = require("bcrypt");
 const z = require("zod");
 const jwt = require("jsonwebtoken");
-const Jwt_SECRET = "macc1234";
+const Jwt_USER_SECRET = "macc1234";
 
 
 userRouter.post("/signup", async (req, res) => {
@@ -33,7 +33,7 @@ userRouter.post("/signup", async (req, res) => {
         return;
     }
 
-   const {email,password,firstname,lastname}=req.body
+   const {email,password,firstname,lastname}=parsedatawithsuccess.data
 
     console.log("Password received during signup:", password); 
     const hashedpassword = await bcrypt.hash(password, 5)
@@ -75,8 +75,8 @@ userRouter.post("/signin", async (req, res) => {
     if (matchedpassword) {
         const token = jwt.sign({
             id: user._id,
-            role:user.role
-        }, Jwt_SECRET)
+            
+        }, Jwt_USER_SECRET)
 
         res.json({
             token

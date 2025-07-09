@@ -2,6 +2,10 @@ const{Router}=require('express')
 const{adminModel}=require("../db")
 const adminRouter=Router()
 const adminmiddleware = require("../middleware/adminmiddleware");
+const z = require("zod");
+const bcrypt = require("bcrypt");
+const jwt=require('jsonwebtoken')
+const Jwt_ADMIN_SECRET="1234"
 
 adminRouter.post("/signup",async(req,res)=>{
     const hasuppercase = (val) => /[A-Z]/.test(val);
@@ -28,13 +32,13 @@ adminRouter.post("/signup",async(req,res)=>{
             return;
         }
     
-       const {email,password,firstname,lastname}=req.body
+       const {email,password,firstname,lastname}=parsedatawithsuccess.data
     
         console.log("Password received during signup:", password); 
         const hashedpassword = await bcrypt.hash(password, 5)
         console.log(hashedpassword)
         try {
-            await userModel.create({
+            await adminModel.create({
                 firstname:firstname,
                 lastname:lastname,
                 password: hashedpassword,
@@ -57,7 +61,7 @@ adminRouter.post("/signup",async(req,res)=>{
 adminRouter.post("/signin",async(req,res)=>{
     const {password,email} = req.body
     
-    const user = await userModel.findOne({
+    const user = await adminModel.findOne({
         email: email
     })
     if (!user) {
@@ -70,8 +74,8 @@ adminRouter.post("/signin",async(req,res)=>{
     if (matchedpassword) {
         const token = jwt.sign({
             id: user._id,
-            role:user.role
-        }, Jwt_SECRET)
+            
+        }, Jwt_ADMIN_SECRET)
 
         res.json({
             token
