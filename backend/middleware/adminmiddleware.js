@@ -1,5 +1,7 @@
 const express=require('express')
 const jwt=require('jsonwebtoken')
+require('dotenv').config();
+
    const Jwt_ADMIN_SECRET=process.env.Jwt_ADMIN_SECRET
 
 

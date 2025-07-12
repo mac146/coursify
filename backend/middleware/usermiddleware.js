@@ -1,5 +1,7 @@
 const express=require('express')
 const jwt=require('jsonwebtoken')
+require('dotenv').config();
+
 const Jwt_USER_SECRET=process.env.Jwt_USER_SECRET
 
 async function usermiddleware(req,res,next){
@@ -12,7 +14,7 @@ async function usermiddleware(req,res,next){
             })
         }
         const decoded=jwt.verify(token,Jwt_USER_SECRET)
-            req.userid=decoded.id
+            req.userid=decoded.userid
             next();
         
     }catch(e){

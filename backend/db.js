@@ -1,8 +1,9 @@
 const mongoose=require('mongoose')
+require('dotenv').config();
 mongoose.connect(process.env.mongoose_url)
 
 const Schema=mongoose.Schema
-const ObjectId=mongoose.Types.ObjectId
+
 
 const user=new Schema({
 
@@ -30,8 +31,8 @@ const courseSchema = new Schema({
 })
 
 const purchaseSchema = new  Schema({
-  userid: { type: ObjectId, ref: "users" },
-  courseid: { type: ObjectId, ref: "courses" }
+  userid: { type: Schema.Types.ObjectId, ref: "users", required: true },
+  courseid: { type: Schema.Types.ObjectId, ref: "courses", required: true }
 })
 
 const userModel = mongoose.model("users", user);

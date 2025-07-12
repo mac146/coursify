@@ -1,11 +1,12 @@
 const{Router}=require('express')
 const userRouter=Router()
-const {userModel}=require("../db")
+const {userModel, purchaseModel}=require("../db")
 const usermiddleware = require("../middleware/usermiddleware");
 const bcrypt = require("bcrypt");
 const z = require("zod");
 const jwt = require("jsonwebtoken");
-const Jwt_USER_SECRET = "macc1234";
+const Jwt_USER_SECRET = process.env.Jwt_USER_SECRET
+
 
 
 userRouter.post("/signup", async (req, res) => {
@@ -74,7 +75,7 @@ userRouter.post("/signin", async (req, res) => {
     const matchedpassword = await bcrypt.compare(password, user.password)
     if (matchedpassword) {
         const token = jwt.sign({
-            id: user._id,
+            userid: user._id,
             
         }, Jwt_USER_SECRET)
 
@@ -89,8 +90,13 @@ userRouter.post("/signin", async (req, res) => {
     }
 })
 
-userRouter.get("/purchases",usermiddleware,(req,res)=>{
-    res.json({ message: "purchases endpoint" });
+userRouter.get("/purchases",usermiddleware,async(req,res)=>{
+    const id=req.userid
+
+    const purchases=await purchaseModel.find({userid:id})
+    res.json({
+        purchases
+    })
 })
 
 module.exports={
